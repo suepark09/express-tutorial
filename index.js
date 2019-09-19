@@ -53,7 +53,7 @@ app.post('/api/courses', (request, response) => {
 
 app.put('/api/courses/:id', function (request, response) {
     const course = courses.find(c => c.id === parseInt(request.params.id));
-    if(!course) response.status(404).send('the course was not found');
+    if(!course) return response.status(404).send('the course was not found');
  
     const {error} = validateCourse(request.body)
 
@@ -74,14 +74,27 @@ function validateCourse (course) {
 }
 
 
-
-
 app.get('/api/courses/:id', function (request, response) {
     const course = courses.find(c => c.id === parseInt(request.params.id));
     console.log(course)
     if(!course) response.status(404).send('the course was not found');
     response.send(course);
 });
+
+app.delete('/api/courses/:id', function (request, response) {
+    const course = courses.find(function (item) {
+        item.id === parseInt(request.params.id)
+    });
+    if (!course) response.status(404).send('the course was not found');
+
+    const index = courses.indexOf(course);
+    courses.splice(index, 1);
+
+    response.send(course);
+
+})
+
+
 
 
 //environment variable for port type
